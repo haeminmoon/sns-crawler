@@ -1,0 +1,22 @@
+{
+  "name": "sns-crawler",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "deploy-api-gateway": "cd resource-api-gateway && sls deploy -v --stage $STAGE && cd ..",
+    "remove-api-gateway": "cd resource-api-gateway && sls remove -v --stage $STAGE && cd ..",
+
+    "deploy-api-instagram": "cd api-instagram && sls deploy -v --stage $STAGE && cd ..",
+    "remove-api-instagram": "cd api-instagram && sls remove -v --stage $STAGE && cd .."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haeminmoon/sns-crawler.git"
+  },
+  "author": "Harace Moon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/haeminmoon/sns-crawler/issues"
+  },
+  "homepage": "https://github.com/haeminmoon/sns-crawler#readme"
+}

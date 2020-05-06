@@ -1,0 +1,22 @@
+# Package directories
+/node_modules
+/jspm_packages
+
+# Serverless directories
+.serverless
+.webpack
+
+# env and secrets
+.env
+credentials.yml
+
+# MacOS files
+.DS_Store
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln

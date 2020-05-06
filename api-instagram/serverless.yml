@@ -1,0 +1,52 @@
+service: sns-crawler-api
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-warmup
+
+custom:  
+  stage: ${opt:stage, 'dev'}
+  # layer: 
+  #   stack: ${file(../env.yml):layer.stack}
+  #   name:
+  #     libs: ${file(../env.yml):layer.name.libs}
+  #     nodejs: ${file(../env.yml):layer.name.nodejs}
+  warmup:
+    name: sns-crawler-api-warmer
+    events:
+      - schedule:
+          rate: cron(0/10 * * * ? *)
+    payload:
+      source: 'sns-crawler-warmer'
+
+provider:
+  name: aws
+  runtime: nodejs10.20
+  stage: ${self:custom.stage}
+  region: ap-northeast-2
+
+  apiGateway:
+    restApiId:
+      'Fn::ImportValue': ${self:custom.stage}-sns-crawler-ApiGatewayRestApiId
+    restApiRootResourceId:
+      'Fn::ImportValue': ${self:custom.stage}-sns-crawler-ApiGatewayRestApiRootResourceId
+
+  # These environment variables are made available to our functions under process.env.
+  environment:
+
+
+  # you can add statements to the Lambda function's IAM Role here
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+      Resource: "*"
+
+package:
+  exclude:
+    # - ./node_modules/**
+    - README.md
+    - package-lock.json
+
+functions:
+  - ${file(./resources/function-sns-crawler.yml)}

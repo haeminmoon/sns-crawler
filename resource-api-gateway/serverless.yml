@@ -1,0 +1,78 @@
+service: sns-crawler-api-gateway
+
+plugins:
+  # - serverless-domain-manager
+
+custom:  
+  stage: ${opt:stage, 'dev'}
+  # domains: ${file(../env.yml):${self:custom.stage}.domains, file(../env.yml):dev.domains}
+
+  # customDomain:
+  #   domainName: ${self:custom.domains.api}
+  #   certificateName: ${self:custom.domains.cm}
+  #   stage: ${self:custom.stage}
+  #   endpointType: ${self:custom.domains.type}
+  #   createRoute53Record: ${self:custom.domains.hasRoute53}
+
+provider:
+  name: aws
+  runtime: nodejs10.20
+  stage: ${self:custom.stage}
+  region: ap-northeast-2
+
+package:
+  exclude:
+    - ./node_modules/**
+    - .gitignore
+    - README.md
+
+functions:
+  root:
+    handler: root
+    events:
+      - http:
+          path: /
+          method: get
+          cors: true
+
+resources:
+  Resources:
+    ApiGatewayRestApi:
+      Type: AWS::ApiGateway::RestApi
+      Properties: 
+        Name: ${self:custom.stage}-sns-crawler-api-gateway
+
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: ApiGatewayRestApi
+
+    GatewayResponseDefault5XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_5XX
+        RestApiId:
+          Ref: ApiGatewayRestApi
+
+  Outputs:
+    ApiGatewayRestApiId:
+      Value:
+        !Ref ApiGatewayRestApi
+      Export:
+        Name: ${self:custom.stage}-sns-crawler-ApiGatewayRestApiId
+  
+    ApiGatewayRestApiRootResourceId:
+      Value:
+        Fn::GetAtt:
+          - ApiGatewayRestApi
+          - RootResourceId 
+      Export:
+        Name: ${self:custom.stage}-sns-crawler-ApiGatewayRestApiRootResourceId
