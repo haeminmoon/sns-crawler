@@ -1,4 +1,4 @@
-service: api-instagram
+service: api-facebook
 
 plugins:
   - serverless-offline-ssm
@@ -14,12 +14,12 @@ custom:
   #     libs: ${file(../env.yml):layer.name.libs}
   #     nodejs: ${file(../env.yml):layer.name.nodejs}
   warmup:
-    name: ${self:custom.stage}-api-instagram-warmer
+    name: ${self:custom.stage}-api-facebook-warmer
     events:
       - schedule:
           rate: cron(0/10 * * * ? *)
     payload:
-      source: 'api-instagram-warmer'
+      source: 'api-facebook-warmer'
   splitStacks:
     perFunction: false
     perType: false
@@ -55,4 +55,4 @@ package:
     - package-lock.json
 
 functions:
-  - ${file(./resources/function-instagram.yml)}
+  - ${file(./resources/function-facebook.yml)}

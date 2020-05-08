@@ -1,0 +1,13 @@
+{
+  "name": "layers",
+  "version": "1.0.0",
+  "description": "Lambda Layers Project",
+  "scripts": {
+    "deploy-common-libs": "cd common-libs && ./deploy.sh",
+    "remove-common-libs": "cd common-libs && sls remove --stage $STAGE",
+    "local": "cd common-libs && ./local.sh",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Harace Moon",
+  "dependencies": {}
+}

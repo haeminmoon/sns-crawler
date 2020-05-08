@@ -1,0 +1,39 @@
+service: common-libs
+
+custom:
+
+  stage: ${opt:stage, self:provider.stage}
+
+  # webpack:
+  #   webpackConfig: ./webpack.config.js
+  #   includeModules:
+  #     forceExclude:
+  #       - ''
+  #   packager: 'yarn'
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  stage: dev
+  region: ap-northeast-2
+
+layers:
+  libs:
+    name: ${self:custom.stage}-libs
+    path: dist/commonLibs
+  nodejs:
+    name: ${self:custom.stage}-nodejs
+    path: dist/nodeDependencies
+
+resources:
+  Outputs:
+    Libs:
+      Value:
+        Ref: LibsLambdaLayer
+      Export:
+        Name: ${self:custom.stage}LibsLambdaLayer
+    Nodejs:
+      Value:
+        Ref: NodejsLambdaLayer
+      Export:
+        Name: ${self:custom.stage}NodejsLambdaLayer

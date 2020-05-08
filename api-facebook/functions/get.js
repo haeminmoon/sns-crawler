@@ -1,7 +1,8 @@
 Object.assign(global, require('fff-js'));
 
-const { success, failure, convertEvent2inputData } = require('./utils/api-util');
-const { BITTREX } = require('./utils/bittrex');
+const { success, failure } = require('/opt/libs/response-lib')
+const { convertEvent2inputData } = require('/opt/libs/api-util-lib')
+const { AUTH } = require('/opt/libs/authorizer-lib')
 
 exports.getBalances = async (event, context) => {
   if (event.source === 'trading-warmer') return ;

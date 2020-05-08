@@ -1,0 +1,19 @@
+# Dependency directories
+node_modules
+jspm_packages
+
+# Serverless
+.webpack
+.serverless
+
+# env
+env.yml
+.env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# MacOS files
+.DS_Store

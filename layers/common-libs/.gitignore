@@ -1,0 +1,25 @@
+# Dependency directories
+node_modules
+jspm_packages
+config
+
+# bundled files
+dist
+
+# Serverless
+.webpack
+.serverless
+
+# env and secrets
+env.yml
+.env
+wtdb-credentials.json
+
+# IDEs
+.idea
+.vscode
+
+# Logs
+logs
+*.log
+npm-debug.log*

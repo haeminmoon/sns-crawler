@@ -1,4 +1,4 @@
-const { log, go } = require('ffp-js');
+const { log, go } = require('fff-js');
 
 const puppeteer = require('puppeteer');
 const dotenv = require('dotenv');

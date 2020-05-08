@@ -1,0 +1,8 @@
+getBalances:
+  handler: functions/get.getBalances
+  events:
+    - http:
+        path: getBalances
+        method: get
+        cors: true
+  warmup: true

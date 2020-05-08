@@ -7,7 +7,14 @@
     "remove-api-gateway": "cd resource-api-gateway && sls remove -v --stage $STAGE && cd ..",
 
     "deploy-api-instagram": "cd api-instagram && sls deploy -v --stage $STAGE && cd ..",
-    "remove-api-instagram": "cd api-instagram && sls remove -v --stage $STAGE && cd .."
+    "remove-api-instagram": "cd api-instagram && sls remove -v --stage $STAGE && cd ..",
+
+    "deploy-layers": "cd layers && npm run deploy-common-libs && cd ..",
+    "remove-layers": "cd layers && npm run remove-common-libs && cd ..",
+    "deploy-layers-local": "npm install && cd layers && npm run local",
+
+    "create-custom-domain": "cd resource-api-gateway && sls create_domain --stage $STAGE && cd ..",
+    "merge-dependencies": "export PARENT_DIR=./ && export DEPENDENCIES_DEST=./ && node ./scripts/package-json-merger.js"
   },
   "repository": {
     "type": "git",

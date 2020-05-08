@@ -1,0 +1,18 @@
+{
+  "name": "api-instagram",
+  "version": "1.0.0",
+  "description": "Instagram for crawling on AWS Lambda",
+  "scripts": {
+    "deploy": "sls deploy -v --stage $STAGE",
+    "remove": "sls remove -v --stage $STAGE",
+    "start": "sls offline start"
+  },
+  "author": "Harace, Moon",
+  "devDependencies": {
+    "serverless-offline": "^4.10.6",
+    "serverless-plugin-warmup": "^4.5.3-rc.1"
+  },
+  "dependencies": {
+    "fff-js": "0.0.13"
+  }
+}
