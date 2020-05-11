@@ -1,7 +1,7 @@
 service: api-instagram
 
 plugins:
-  - serverless-offline-ssm
+  # - serverless-offline-ssm
   - serverless-offline
   - serverless-plugin-warmup
   - serverless-plugin-split-stacks
@@ -50,7 +50,7 @@ provider:
 
 package:
   exclude:
-    # - ./node_modules/**
+    - ./node_modules/**
     - README.md
     - package-lock.json
 

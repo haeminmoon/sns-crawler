@@ -37,3 +37,9 @@ resources:
         Ref: NodejsLambdaLayer
       Export:
         Name: ${self:custom.stage}NodejsLambdaLayer
+
+package:
+  exclude:
+    - ./node_modules/puppeteer
+    - README.md
+    - package-lock.json

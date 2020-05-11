@@ -12,6 +12,6 @@
   "license": "MIT",
   "devDependencies": {
     "fff-js": "^0.0.13",
-    "serverless-domain-manager": "^3.3.2"
+    "serverless-domain-manager": "^4.0.0"
   }
 }
