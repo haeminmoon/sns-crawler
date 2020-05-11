@@ -1,7 +1,7 @@
 {
-  "name": "api-instagram",
+  "name": "api-naver-blog",
   "version": "1.0.0",
-  "description": "Instagram for crawling on AWS Lambda",
+  "description": "Naver-Blog for crawling on AWS Lambda",
   "scripts": {
     "deploy": "sls deploy -v --stage $STAGE",
     "remove": "sls remove -v --stage $STAGE",
@@ -9,10 +9,10 @@
   },
   "author": "Harace, Moon",
   "devDependencies": {
-    "serverless-offline": "^4.10.6",
-    "serverless-plugin-warmup": "^4.5.3-rc.1"
-  },
-  "dependencies": {
+    "serverless-offline": "^6.1.5",
+    "serverless-offline-ssm": "^5.0.0",
+    "serverless-plugin-split-stacks": "^1.9.3",
+    "serverless-plugin-warmup": "^4.9.0",
     "fff-js": "0.0.13"
   }
 }

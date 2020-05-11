@@ -7,7 +7,7 @@ exports.badRequest = curry((headers, body) => buildResponse(400, body, headers))
 const accessOriginList =
   [
     'http://localhost:8080',
-    'https://dev.sns-crawler.io',
+    'https://dev.xx.io',
 
   ]
 
@@ -26,7 +26,7 @@ const accessHostList =
     'localhost:3010',
     'localhost:3011',
     'localhost:3012',
-    'api.dev.sns-crawler.io',
+    'api.dev.xx.io',
   ]
 
 function buildResponse (statusCode, body, headers){

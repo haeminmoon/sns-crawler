@@ -1,5 +1,8 @@
 getBalances:
   handler: functions/get.getBalances
+  layers:
+    - ${cf:${self:custom.layer.stack}-${self:custom.stage}.${self:custom.layer.name.libs}}
+    - ${cf:${self:custom.layer.stack}-${self:custom.stage}.${self:custom.layer.name.nodejs}}
   events:
     - http:
         path: getBalances

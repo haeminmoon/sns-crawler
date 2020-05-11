@@ -8,11 +8,11 @@ plugins:
 
 custom:  
   stage: ${opt:stage, 'dev'}
-  # layer: 
-  #   stack: ${file(../env.yml):layer.stack}
-  #   name:
-  #     libs: ${file(../env.yml):layer.name.libs}
-  #     nodejs: ${file(../env.yml):layer.name.nodejs}
+  layer: 
+    stack: ${file(../env.yml):layer.stack}
+    name:
+      libs: ${file(../env.yml):layer.name.libs}
+      nodejs: ${file(../env.yml):layer.name.nodejs}
   warmup:
     name: ${self:custom.stage}-api-instagram-warmer
     events:
@@ -27,7 +27,7 @@ custom:
 
 provider:
   name: aws
-  runtime: nodejs10.20
+  runtime: nodejs10.x
   stage: ${self:custom.stage}
   region: ap-northeast-2
 

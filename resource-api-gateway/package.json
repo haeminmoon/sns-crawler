@@ -1,7 +1,7 @@
 {
   "name": "sns-crawler-api-gateway",
   "version": "1.0.0",
-  "description": "API Service for SPIN Protocol Celeb Project on AWS API Gateway",
+  "description": "API Service project on AWS API Gateway",
   "scripts": {
     "deploy": "sls deploy -v --stage $STAGE",
     "remove": "sls remove -v --stage $STAGE",
@@ -13,6 +13,5 @@
   "devDependencies": {
     "fff-js": "^0.0.13",
     "serverless-domain-manager": "^3.3.2"
-  },
-  "dependencies": {}
+  }
 }

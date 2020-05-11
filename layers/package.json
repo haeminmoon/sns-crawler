@@ -8,6 +8,5 @@
     "local": "cd common-libs && ./local.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Harace Moon",
-  "dependencies": {}
+  "author": "Harace Moon"
 }

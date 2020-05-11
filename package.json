@@ -11,10 +11,14 @@
 
     "deploy-layers": "cd layers && npm run deploy-common-libs && cd ..",
     "remove-layers": "cd layers && npm run remove-common-libs && cd ..",
-    "deploy-layers-local": "npm install && cd layers && npm run local",
+    "deploy-layers-local": "cd layers && npm run local",
 
     "create-custom-domain": "cd resource-api-gateway && sls create_domain --stage $STAGE && cd ..",
-    "merge-dependencies": "export PARENT_DIR=./ && export DEPENDENCIES_DEST=./ && node ./scripts/package-json-merger.js"
+    "merge-dependencies": "export PARENT_DIR=./ && export DEPENDENCIES_DEST=./ && node ./scripts/package-json-merger.js",
+
+    "latest-update-dependencies": "cd resource-api-gateway && ncu-u && cd ../api-facebook && ncu-u && cd ../api-instagram && ncu-u && cd ../api-naver-blog && ncu-u && cd ../api-tiktok && ncu-u && cd ../api-youtube && ncu-u && cd ..",
+    "install-dependencies": "cd resource-api-gateway && npm install && cd ../api-facebook && npm install && cd ../api-instagram && npm install && cd ../api-naver-blog && npm install && cd ../api-tiktok && npm install && cd ../api-youtube && npm install && cd .."
+    
   },
   "repository": {
     "type": "git",
