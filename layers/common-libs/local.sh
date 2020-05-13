@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo 'ℹ️  Setting up ℹ️'
-rm -rf dist && rm -rf node_modules
+rm -rf dist && rm -rf node_modules && rm -rf package-lock.json
 export PARENT_DIR=../../
 export DEPENDENCIES_DEST=./
 # node ../scripts/package-json-merger.js

@@ -14,7 +14,9 @@
     "chrome-aws-lambda": "^3.0.4",
     "fff-js": "^0.0.13",
     "fxsql": "^1.3.1",
-    "puppeteer-core": "^3.0.4"
+    "puppeteer-core": "^3.0.4",
+    "puppeteer-extra": "^3.1.9",
+    "puppeteer-extra-plugin-stealth": "^2.4.9"
   },
   "devDependencies": {
     "puppeteer": "^3.0.4"

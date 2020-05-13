@@ -8,6 +8,11 @@
 
     "deploy-api-instagram": "cd api-instagram && sls deploy -v --stage $STAGE && cd ..",
     "remove-api-instagram": "cd api-instagram && sls remove -v --stage $STAGE && cd ..",
+    "offline-api-instagram": "cd api-instagram && LOCAL=true sls offline --noAuth",
+
+    "deploy-api-tiktok": "cd api-tiktok && sls deploy -v --stage $STAGE && cd ..",
+    "remove-api-tiktok": "cd api-tiktok && sls remove -v --stage $STAGE && cd ..",
+    "offline-api-tiktok": "cd api-tiktok && LOCAL=true sls offline --noAuth",
 
     "deploy-layers": "cd layers && npm run deploy-common-libs && cd ..",
     "remove-layers": "cd layers && npm run remove-common-libs && cd ..",
