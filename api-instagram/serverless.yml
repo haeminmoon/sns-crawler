@@ -50,7 +50,7 @@ provider:
 
 package:
   exclude:
-    - ./node_modules/**
+    - node_modules/**
     - README.md
     - package-lock.json
 

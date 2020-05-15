@@ -12,7 +12,6 @@
     "serverless-offline": "^6.1.5",
     "serverless-offline-ssm": "^5.0.0",
     "serverless-plugin-split-stacks": "^1.9.3",
-    "serverless-plugin-warmup": "^4.9.0",
-    "fff-js": "0.0.13"
+    "serverless-plugin-warmup": "^4.9.0"
   }
 }

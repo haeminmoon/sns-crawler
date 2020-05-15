@@ -6,13 +6,25 @@
     "deploy-api-gateway": "cd resource-api-gateway && sls deploy -v --stage $STAGE && cd ..",
     "remove-api-gateway": "cd resource-api-gateway && sls remove -v --stage $STAGE && cd ..",
 
+    "deploy-api-facebook": "cd api-facebook && sls deploy -v --stage $STAGE && cd ..",
+    "remove-api-facebook": "cd api-facebook && sls remove -v --stage $STAGE && cd ..",
+    "offline-api-facebook": "cd api-facebook && LOCAL=true sls offline --noAuth",
+
     "deploy-api-instagram": "cd api-instagram && sls deploy -v --stage $STAGE && cd ..",
     "remove-api-instagram": "cd api-instagram && sls remove -v --stage $STAGE && cd ..",
     "offline-api-instagram": "cd api-instagram && LOCAL=true sls offline --noAuth",
 
+    "deploy-api-naver-blog": "cd api-naver-blog && sls deploy -v --stage $STAGE && cd ..",
+    "remove-api-naver-blog": "cd api-naver-blog && sls remove -v --stage $STAGE && cd ..",
+    "offline-api-naver-blog": "cd api-naver-blog && LOCAL=true sls offline --noAuth",
+
     "deploy-api-tiktok": "cd api-tiktok && sls deploy -v --stage $STAGE && cd ..",
     "remove-api-tiktok": "cd api-tiktok && sls remove -v --stage $STAGE && cd ..",
     "offline-api-tiktok": "cd api-tiktok && LOCAL=true sls offline --noAuth",
+
+    "deploy-api-youtube": "cd api-youtube && sls deploy -v --stage $STAGE && cd ..",
+    "remove-api-youtube": "cd api-youtube && sls remove -v --stage $STAGE && cd ..",
+    "offline-api-youtube": "cd api-youtube && LOCAL=true sls offline --noAuth",
 
     "deploy-layers": "cd layers && npm run deploy-common-libs && cd ..",
     "remove-layers": "cd layers && npm run remove-common-libs && cd ..",

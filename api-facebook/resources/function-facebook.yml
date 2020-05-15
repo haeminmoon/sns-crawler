@@ -1,8 +1,13 @@
-getBalances:
-  handler: functions/get.getBalances
+getProfile:
+  handler: functions/get.getProfile
+  timeout: 15
+  memorySize: 1536
+  layers:
+    - ${cf:${self:custom.layer.stack}-${self:custom.stage}.${self:custom.layer.name.libs}}
+    - ${cf:${self:custom.layer.stack}-${self:custom.stage}.${self:custom.layer.name.nodejs}}
   events:
     - http:
-        path: getBalances
+        path: /facebook/getProfile
         method: get
         cors: true
   warmup: true
