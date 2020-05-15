@@ -6,8 +6,12 @@ const {
   queryStr
 } = require('/opt/libs/api-util-lib')
 
-const { getBrowser } = require('/opt/libs/crawler-lib')
+const crawlerPath = (process.env.LOCAL == 'true') 
+  ? '../../layers/common-libs/src/crawler-lib' 
+  : '/opt/libs/crawler-lib'
 
+const { getBrowser } = require(crawlerPath)
+  
 /**
  * @name getProfile
  * @description: Get instagram profile from instagram user's ID

@@ -6,7 +6,11 @@ const {
   queryStr
 } = require('/opt/libs/api-util-lib')
 
-const { getBrowser } = require('/opt/libs/crawler-lib')
+const crawlerPath = (process.env.LOCAL == 'true') 
+  ? '../../layers/common-libs/src/crawler-lib' 
+  : '/opt/libs/crawler-lib'
+
+const { getBrowser } = require(crawlerPath)
 
 /**
  * @name getProfile
@@ -32,6 +36,8 @@ exports.getProfile = async (event, context) => {
     /** Start crawling */
     await page.goto(`https://www.tiktok.com/@${id}`)
     await page.waitForSelector('#main')
+    await page.waitForSelector('.jsx-581822467.jsx-3479153002.jsx-4025130069.avatar')
+    await page.waitForSelector('h2.jsx-2971206140.count-infos')
     const profileDataValues = await page.$$eval('.jsx-2971206140.number', els => els.map(el => el.textContent))
     const profileImgUrl = await page.$eval('.jsx-581822467.jsx-3479153002.jsx-4025130069.avatar-wrapper.round', el => el.src)
     
