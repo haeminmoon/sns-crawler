@@ -30,7 +30,8 @@ exports.getProfile = async (event, context) => {
     const profileDataKeys = [
       'following',
       'followers',
-      'likes'
+      'likes',
+      'imgUrl'
     ]
 
     /** Start crawling */
@@ -38,29 +39,25 @@ exports.getProfile = async (event, context) => {
     await page.waitForSelector('#main')
     await page.waitForSelector('.jsx-581822467.jsx-3479153002.jsx-4025130069.avatar')
     await page.waitForSelector('h2.jsx-2971206140.count-infos')
-    const profileDataValues = await page.$$eval('.jsx-2971206140.number', els => els.map(el => el.textContent))
+    const targetEls = await page.$$eval('.jsx-2971206140.number', els => els.map(el => el.textContent))
     const profileImgUrl = await page.$eval('.jsx-581822467.jsx-3479153002.jsx-4025130069.avatar-wrapper.round', el => el.src)
     
     await page.close()
     await browser.close()
 
     /** Result processing */
-    const profileData = go(
-      merge(profileDataKeys, profileDataValues),
+    const profile = go(
+      [...targetEls, profileImgUrl],
+      profileDataValues => merge(profileDataKeys, profileDataValues),
       object
     )
-    
-    const profile = {
-      profileImgUrl: profileImgUrl,
-      profileData: profileData
-    }
 
     return !(id) 
       ? go({ status: false, message: 'Error params' }, failure)
       : go({ status: true, result: profile }, success)
   } catch (e) {
-    await page.close();
-    await browser.close();
+    await page.close()
+    await browser.close()
     return go({ status: false, message: e.message }, failure)
   }
 }

@@ -30,39 +30,36 @@ exports.getProfile = async (event, context) => {
     const profileDataKeys = [
       'posts',
       'followers',
-      'following'
+      'following',
+      'imgUrl'
     ]
 
     /** Start crawling */
     await page.goto(`https://instagram.com/${id}`)
     await page.waitForSelector('main.SCxLW.o64aR')
-    const profileDataValues = await page.$$eval('.g47SY', els => els.map(el => el.textContent))
+    const targetEls = await page.$$eval('.g47SY', els => els.map(el => el.textContent))
     // mac
     // const profileImgUrl = await page.$eval('._6q-tv', el => el.src)
     // linux
-    const profileImgUrl = await page.$eval('img', el => el.src)
+    const profileImgUrl = await page.$eval('img._6q-tv', el => el.src)
     
 
     await page.close()
     await browser.close()
 
     /** Result processing */
-    const profileData = go(
-      merge(profileDataKeys, profileDataValues),
+    const profile = go(
+      [...targetEls, profileImgUrl],
+      profileDataValues => merge(profileDataKeys, profileDataValues),
       object
     )
-    
-    const profile = {
-      profileImgUrl: profileImgUrl,
-      profileData: profileData
-    }
 
     return !(id) 
       ? go({ status: false, message: 'Error params' }, failure)
       : go({ status: true, result: profile }, success)
   } catch (e) {
-    await page.close();
-    await browser.close();
+    await page.close()
+    await browser.close()
     return go({ status: false, message: e.message }, failure)
   }
 }

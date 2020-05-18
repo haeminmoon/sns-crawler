@@ -30,7 +30,8 @@ exports.getProfile = async (event, context) => {
     const profileDataKeys = [
       'name',
       'subscribers',
-      'views'
+      'views',
+      'imgUrl'
     ]
     
     /** Start crawling */
@@ -38,7 +39,7 @@ exports.getProfile = async (event, context) => {
     await page.waitForSelector('.style-scope .ytd-c4-tabbed-header-renderer .no-transition')
     await page.waitForSelector('#subscriber-count')
 
-    const targetEls1 = await page.$$eval('ytd-channel-about-metadata-renderer > #right-column > yt-formatted-string', els => els.map(el => el.innerText));
+    const targetEls = await page.$$eval('ytd-channel-about-metadata-renderer > #right-column > yt-formatted-string', els => els.map(el => el.innerText));
     const name = await page.$eval('#inner-header-container > #meta > ytd-channel-name > #container > div#text-container > yt-formatted-string.style-scope.ytd-channel-name', el => el.innerText);
     const subscribers = await page.$eval('#subscriber-count', el => el.textContent);
     const profileImgUrl = await page.$eval('.style-scope .ytd-c4-tabbed-header-renderer .no-transition > img', el => el.src)
@@ -47,31 +48,27 @@ exports.getProfile = async (event, context) => {
     await browser.close()
 
     /** Result processing */
-    const profileData = go(
+    const profile = go(
       /**
        * targetEls1.length = 3
        * 2 Index = n views
        */
-      [name, subscribers, targetEls1[2]],
-      mapL(el => el.split(' ')),
-      mapL(el => first(el)),
+      [subscribers, targetEls[2], profileImgUrl],
+      mapL(split(' ')),
+      mapL(first),
       takeAll,
+      splitedArr => [name, ...splitedArr],
       profileDataValues => merge(profileDataKeys, profileDataValues),
       object
     )
-    
-    const profile = {
-      profileImgUrl: profileImgUrl,
-      profileData: profileData
-    }
 
     return !(id) 
       ? go({ status: false, message: 'Error params' }, failure)
       : go({ status: true, result: profile }, success)
-      
+
   } catch (e) {
-    await page.close();
-    await browser.close();
+    await page.close()
+    await browser.close()
     return go({ status: false, message: e.message }, failure)
   }
 }

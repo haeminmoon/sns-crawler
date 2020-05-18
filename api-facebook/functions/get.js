@@ -29,9 +29,9 @@ exports.getProfile = async (event, context) => {
     /** Setting */
     const profileDataKeys = [
       'like',
-      'follow'
+      'follow',
+      'imgUrl'
     ]
-    
     
     /** Start crawling */
     await page.goto(`https://www.facebook.com/${id}`)
@@ -46,31 +46,26 @@ exports.getProfile = async (event, context) => {
 
 
     /** Result processing */
-    const profileData = go(
+    const profile = go(
       /**
        * targetEls.length = 7
        * 2 Index = n people like this
        * 3 Index = n people follow this
        */
-      [targetEls[2], targetEls[3]],
-      mapL(el => el.split(' ')),
-      mapL(el => first(el)),
+      [targetEls[2], targetEls[3], profileImgUrl],
+      mapL(split(' ')),
+      mapL(first),
       takeAll,
       profileDataValues => merge(profileDataKeys, profileDataValues),
       object
     )
-    
-    const profile = {
-      profileImgUrl: profileImgUrl,
-      profileData: profileData
-    }
 
     return !(id) 
       ? go({ status: false, message: 'Error params' }, failure)
       : go({ status: true, result: profile }, success)
   } catch (e) {
-    await page.close();
-    await browser.close();
+    await page.close()
+    await browser.close()
     return go({ status: false, message: e.message }, failure)
   }
 }
