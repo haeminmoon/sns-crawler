@@ -1,0 +1,235 @@
+service: spin-resource-function
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-existing-s3
+
+custom:
+  stage: ${opt:stage, 'dev'}
+  cognito: ${file(../env.yml):${self:custom.stage}.cognito, file(../env.yml):dev.congito}
+  domains: ${file(../env.yml):${self:custom.stage}.domains, file(../env.yml):dev.domains}
+  layer:
+    stack: ${file(../env.yml):layer.stack}
+    name:
+      libs: ${file(../env.yml):layer.name.libs}
+      nodejs: ${file(../env.yml):layer.name.nodejs}
+  s3path:
+    bucket: ${file(../env.yml):${self:custom.stage}.s3prefixPath.bucket}
+    profile: ${file(../env.yml):${self:custom.stage}.s3prefixPath.profile}
+    cover: ${file(../env.yml):${self:custom.stage}.s3prefixPath.cover}
+    campaign: ${file(../env.yml):${self:custom.stage}.s3prefixPath.campaign}
+    notice: ${file(../env.yml):${self:custom.stage}.s3prefixPath.notice}
+    # product: ${file(../env.yml):${self:custom.stage}.s3prefixPath.product}
+  region: ${file(../env.yml):region}
+  table:
+    paymentTable: ${self:custom.stage}-${file(../env.yml):${self:.custom.stage}.dynamoDb.paymentTable}
+    referralPaymentTable: ${self:custom.stage}-${file(../env.yml):${self:.custom.stage}.dynamoDb.referralPaymentTable}
+  vpc: ${file(../env.yml):${self:custom.stage}.vpc, file(../env.yml):dev.vpc}
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  stage: ${self:custom.stage}
+  region: ${self:custom.region}
+  vpc:
+    securityGroupIds:
+      - ${self:custom.vpc.securityGroupIds}
+    subnetIds:
+      - ${self:custom.vpc.subnetId1}
+      - ${self:custom.vpc.subnetId2}
+
+  environment:
+    USER_POOL_ID: ${self:custom.cognito.userPoolId}
+    STAGE: ${self:custom.stage}
+    REGION: ${self:custom.region}
+    PAYMENT_TABLE: ${self:custom.table.paymentTable}
+    REFERRAL_PAYMENT_TABLE: ${self:custom.table.referralPaymentTable}
+    DB_HOST: ${ssm:/${self:custom.stage}/spindb/host~true}
+    DB_USER: ${ssm:/${self:custom.stage}/spindb/user~true}
+    DB_PASSWORD: ${ssm:/${self:custom.stage}/spindb/password~true}
+    DB_DATABASE: ${ssm:/${self:custom.stage}/spindb/database~true}
+    SOLAPI_API_KEY: ${ssm:/${self:custom.stage}/solapi/apiKey~true}
+    SOLAPI_API_SECRET: ${ssm:/${self:custom.stage}/solapi/apiSecret~true}
+    SOLAPI_SENDER: ${ssm:/${self:custom.stage}/solapi/sender}
+
+  apiGateway:
+    restApiId:
+      'Fn::ImportValue': ${self:custom.stage}-spin-ApiGatewayRestApiId
+    restApiRootResourceId:
+      'Fn::ImportValue': ${self:custom.stage}-spin-ApiGatewayRestApiRootResourceId
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - ssm:*
+      Resource: arn:aws:ssm:ap-northeast-2:*:parameter/*
+    - Effect: Allow
+      Action:
+        - kms:*
+      Resource: "*"
+    - Effect: "Allow"
+      Action:
+        - "s3:GetBucketNotification"
+        - "s3:PutBucketNotification"
+        - "s3:GetObject"
+        - "s3:PutObject"
+      Resource:
+        Fn::Join:
+          - "/"
+          - - !ImportValue ${self:custom.stage}-spin-UserImageBucketArn
+            - "*"
+    - Effect: "Allow"
+      Action:
+        - "execute-api:Invoke"
+      Resource:
+        - "arn:aws:execute-api:*:*:*"
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+      Resource: "*"
+    - Effect: Allow
+      Action:
+        - "dynamodb:*"
+      Resource: "*"
+    - Effect: Allow
+      Action:
+        - ec2:CreateNetworkInterface
+        - ec2:DescribeNetworkInterfaces
+        - ec2:DetachNetworkInterface
+        - ec2:DeleteNetworkInterface
+      Resource: "*"
+
+
+package:
+  exclude:
+    # - ./node_modules/**
+    - .gitignore
+    - README.md
+    - yarn.lock
+    - package-lock.json
+
+functions:
+  - ${file(./resources/function-authorizer.yml)}
+  - ${file(./resources/function-imageResizer.yml)}
+  - ${file(./resources/function-scheduler.yml)}
+  - ${file(./resources/function-streamer.yml)}
+
+resources:
+  Resources:
+    ProfileImageResizeLambdaPermissionS3:
+      Type: "AWS::Lambda::Permission"
+      Properties:
+        FunctionName:
+          !GetAtt ProfileImageResizerLambdaFunction.Arn
+        Principal: "s3.amazonaws.com"
+        Action: "lambda:InvokeFunction"
+        SourceAccount:
+          Ref: AWS::AccountId
+        SourceArn: !ImportValue ${self:custom.stage}-spin-UserImageBucketArn
+    CoverImageResizerLambdaPermissionS3:
+      Type: "AWS::Lambda::Permission"
+      Properties:
+        FunctionName:
+          !GetAtt CoverImageResizerLambdaFunction.Arn
+        Principal: "s3.amazonaws.com"
+        Action: "lambda:InvokeFunction"
+        SourceAccount:
+          Ref: AWS::AccountId
+        SourceArn: !ImportValue ${self:custom.stage}-spin-UserImageBucketArn
+    # ProductImageResizerLambdaPermissionS3:
+    #   Type: "AWS::Lambda::Permission"
+    #   Properties:
+    #     FunctionName:
+    #       !GetAtt ProductImageResizerLambdaFunction.Arn
+    #     Principal: "s3.amazonaws.com"
+    #     Action: "lambda:InvokeFunction"
+    #     SourceAccount:
+    #       Ref: AWS::AccountId
+    #     SourceArn: !ImportValue ${self:custom.stage}-spin-UserImageBucketArn
+    PaymentTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        TableName: ${self:custom.table.paymentTable}
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 100
+          WriteCapacityUnits: 100
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
+
+    ReferralPaymentTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        TableName: ${self:custom.table.referralPaymentTable}
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 100
+          WriteCapacityUnits: 100
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
+
+  Outputs:
+    # Authorizer
+    authorizerIsAdminArn:
+      Value:
+        Fn::GetAtt: AdminAuthorizerLambdaFunction.Arn
+      Export:
+        Name: ${self:custom.stage}-spin-authorizer-isAdminArn
+    authorizerIsAdminName:
+      Value:
+        !Ref AdminAuthorizerLambdaFunction
+      Export:
+        Name: ${self:custom.stage}-spin-authorizer-isAdminName
+
+    authorizerIsInfluencerArn:
+      Value:
+        Fn::GetAtt: InfluencerAuthorizerLambdaFunction.Arn
+      Export:
+        Name: ${self:custom.stage}-spin-authorizer-isInfluencerArn
+    authorizerIsInfluencerName:
+      Value:
+        !Ref InfluencerAuthorizerLambdaFunction
+      Export:
+        Name: ${self:custom.stage}-spin-authorizer-isInfluencerName
+
+    authorizerIsUserArn:
+      Value:
+        Fn::GetAtt: UserAuthorizerLambdaFunction.Arn
+      Export:
+        Name: ${self:custom.stage}-spin-authorizer-isUserTokenArn
+    authorizerIsUserName:
+      Value:
+        !Ref UserAuthorizerLambdaFunction
+      Export:
+        Name: ${self:custom.stage}-spin-authorizer-isUserTokenName
+
+    # Image Resizer
+    profileImageResizerArn:
+      Value:
+        Fn::GetAtt: ProfileImageResizerLambdaFunction.Arn
+      Export:
+        Name: ${self:custom.stage}-spin-imageResizer-profileArn
+    coverImageResizerArn:
+      Value:
+        Fn::GetAtt: CoverImageResizerLambdaFunction.Arn
+      Export:
+        Name: ${self:custom.stage}-spin-imageResizer-coverArn
+    # productImageResizerArn:
+    #   Value:
+    #     Fn::GetAtt: ProductImageResizerLambdaFunction.Arn
+    #   Export:
+    #     Name: ${self:custom.stage}-spin-imageResizer-productArn

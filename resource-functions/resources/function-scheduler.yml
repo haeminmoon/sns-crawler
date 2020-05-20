@@ -1,0 +1,11 @@
+notifyPaymentScheduler:
+  handler: functions/scheduler/notification/notify.notifyPaymentScheduler
+  layers:
+    - ${cf:${self:custom.layer.stack}-${self:custom.stage}.${self:custom.layer.name.libs}}
+    - ${cf:${self:custom.layer.stack}-${self:custom.stage}.${self:custom.layer.name.nodejs}}
+  events:
+    - schedule: cron(0 10 10 * ? *)
+  warmup: true
+  timeout: 900
+
+

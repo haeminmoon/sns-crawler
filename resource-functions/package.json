@@ -1,0 +1,27 @@
+{
+  "name": "celeb-api-gateway",
+  "version": "1.0.0",
+  "description": "API Service for SPIN Protocol Celeb Project on AWS API Gateway",
+  "scripts": {
+    "deploy": "sls deploy -v --stage $STAGE",
+    "remove": "sls remove -v --stage $STAGE",
+    "i_node": "npm install",
+    "rm_node": "rm *.lock && rm -rf ./node_modules",
+    "test": "mocha -t 20000",
+    "start": "sls offline start"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "aws-sdk": "^2.478.0",
+    "ffp-js": "^0.0.21",
+    "serverless-offline": "^3.31.3",
+    "serverless-plugin-existing-s3": "^2.4.0"
+  },
+  "dependencies": {
+    "@gumlet/gif-resize": "^1.0.4",
+    "async": "^3.0.1",
+    "axios": "^0.19.0",
+    "moment": "^2.24.0"
+  }
+}

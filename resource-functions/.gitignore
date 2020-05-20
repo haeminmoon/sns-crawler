@@ -1,0 +1,23 @@
+# Dependency directories
+node_modules
+jspm_packages
+config
+testResult.json
+package-lock.json
+
+# Serverless
+.webpack
+.serverless
+
+# env
+env.yml
+.env
+
+# IDEs
+.idea
+.vscode
+
+# Logs
+logs
+*.log
+npm-debug.log*
