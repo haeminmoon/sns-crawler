@@ -26,6 +26,9 @@
     "remove-api-youtube": "cd api-youtube && sls remove -v --stage $STAGE && cd ..",
     "offline-api-youtube": "cd api-youtube && LOCAL=true sls offline --noAuth",
 
+    "deploy-resource-functions": "cd resource-functions && sls deploy -v --stage $STAGE && cd ..",
+    "deploy-resource-functions-mac": "cd resource-functions && rm -rf node_modules && rm -rf package-lock.json && node docker-npm.js install && sls deploy -v --stage $STAGE && rm -rf node_modules && rm -rf package-lock.json && cd ..",
+
     "deploy-layers": "cd layers && npm run deploy-common-libs && cd ..",
     "remove-layers": "cd layers && npm run remove-common-libs && cd ..",
     "deploy-layers-local": "cd layers && npm run local",

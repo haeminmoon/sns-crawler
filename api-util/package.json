@@ -1,20 +1,17 @@
 {
-  "name": "resource-functions",
+  "name": "api-util",
   "version": "1.0.0",
-  "description": "",
+  "description": "Naver-Blog for crawling on AWS Lambda",
   "scripts": {
     "deploy": "sls deploy -v --stage $STAGE",
     "remove": "sls remove -v --stage $STAGE",
-    "i_node": "npm install",
-    "rm_node": "rm *.lock && rm -rf ./node_modules",
-    "test": "mocha -t 20000",
     "start": "sls offline start"
   },
-  "author": "",
-  "license": "MIT",
+  "author": "Harace, Moon",
   "devDependencies": {
     "serverless-offline": "^6.1.5",
     "serverless-offline-ssm": "^5.0.0",
-    "serverless-plugin-split-stacks": "^1.9.3"
+    "serverless-plugin-split-stacks": "^1.9.3",
+    "serverless-plugin-warmup": "^4.9.0"
   }
 }

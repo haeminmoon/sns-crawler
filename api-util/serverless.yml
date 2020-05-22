@@ -1,17 +1,25 @@
-service: resource-functions
+service: api-util
 
 plugins:
+  # - serverless-offline-ssm
   - serverless-offline
+  - serverless-plugin-warmup
   - serverless-plugin-split-stacks
 
-custom:
+custom:  
   stage: ${opt:stage, 'dev'}
   layer: 
     stack: ${file(../env.yml):layer.stack}
     name:
       libs: ${file(../env.yml):layer.name.libs}
       nodejs: ${file(../env.yml):layer.name.nodejs}
-  region: ${file(../env.yml):region}
+  warmup:
+    name: ${self:custom.stage}-api-util-warmer
+    events:
+      - schedule:
+          rate: cron(0/10 * * * ? *)
+    payload:
+      source: 'api-util-warmer'
   splitStacks:
     perFunction: false
     perType: false
@@ -29,22 +37,22 @@ provider:
     restApiRootResourceId:
       'Fn::ImportValue': ${self:custom.stage}-sns-crawler-ApiGatewayRestApiRootResourceId
 
+  # These environment variables are made available to our functions under process.env.
+  environment:
+
+
+  # you can add statements to the Lambda function's IAM Role here
   iamRoleStatements:
     - Effect: Allow
       Action:
         - lambda:InvokeFunction
       Resource: "*"
 
-  environment:
-
-
 package:
   exclude:
     - node_modules/**
-    - .gitignore
     - README.md
-    - yarn.lock
     - package-lock.json
 
 functions:
-  - ${file(./resources/function-scheduler.yml)}
+  - ${file(./resources/function-util.yml)}

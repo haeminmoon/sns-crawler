@@ -1,15 +1,13 @@
-getIpListScheduler:
-  handler: functions/scheduler/proxy-collector.getIpListScheduler
+getProxyIpList:
+  handler: functions/get.getProxyIpList
   timeout: 15
   memorySize: 1536
   layers:
     - ${cf:${self:custom.layer.stack}-${self:custom.stage}.${self:custom.layer.name.libs}}
     - ${cf:${self:custom.layer.stack}-${self:custom.stage}.${self:custom.layer.name.nodejs}}
   events:
-    - schedule: rate(1 hour)
-    # - http:
-    #   path: /proxy/getIpListScheduler
-    #   method: get
-    #   cors: true
-
-
+    - http:
+        path: /util/getProxyIpList
+        method: get
+        cors: true
+  warmup: true
