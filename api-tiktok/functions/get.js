@@ -39,6 +39,7 @@ exports.getProfile = async (event, context) => {
     await page.waitForSelector('#main')
     await page.waitForSelector('.jsx-581822467.jsx-3479153002.jsx-4025130069.avatar')
     await page.waitForSelector('h2.jsx-2971206140.count-infos')
+    
     const targetEls = await page.$$eval('.jsx-2971206140.number', els => els.map(el => el.textContent))
     const profileImgUrl = await page.$eval('.jsx-581822467.jsx-3479153002.jsx-4025130069.avatar-wrapper.round', el => el.src)
     

@@ -15,53 +15,44 @@ const { getBrowser } = require(crawlerPath)
 exports.getProxyIpList = async (event, context) => {
   if (event.source === 'api-utils-warmer') return
 
-  const { id } = convertEvent2inputData(event)
-
   const browser = await getBrowser()
   const page = await browser.newPage()
 
   try {
-    /** Setting */
-    const profileDataKeys = [
-      'following',
-      'followers',
-      'likes'
-    ]
-    
     /** Start crawling */
     await page.goto('http://spys.one/free-proxy-list/KR/')
     
-    const proxies = await page.evaluate(() => {
-      const ips = Array.from(document.querySelectorAll('tr > td:first-of-type > .spy14')).map((v) => v.textContent.replace(/document\.write\(.+\)/, ''));
-      const types = Array.from(document.querySelectorAll('tr > td:nth-of-type(2)')).slice(5).map((v) => v.textContent);
-      const latencies = Array.from(document.querySelectorAll('tr > td:nth-of-type(6) .spy1')).map((v) => v.textContent);
-      return ips.map((v, i) => {
-        return {
-          ip: v,
-          type: types[i],
-          latency: latencies[i],
-        }
-      });
-    });
-    const filtered = proxies.filter((v) => v.type.startsWith('HTTP')).sort((p, c) => p.latency - c.latency);
+    await page.waitForSelector('#xpp')
+
+    await page.evaluate(() => {
+      const itemsCount = document.querySelector('#xpp')
+      itemsCount.selectedIndex = 5
+      itemsCount.onchange()
+    })
+
+    await page.waitForNavigation()
+    await page.waitForSelector('#xpp')
+    await page.waitForSelector('tr > td:nth-of-type(6) .spy1')
+    
+    const ips = await page.$$eval('tr > td:first-of-type > .spy14', ips => ips.map(v => v.textContent))
+    const types = await page.$$eval('tr > td:nth-of-type(2)', types => types.map(v => v.textContent))
+    const latencies = await page.$$eval('tr > td:nth-of-type(6) .spy1', latencies => latencies.map(v => v.textContent))
     
     await page.close()
     await browser.close()
 
     /** Result processing */
-    const profileData = go(
-      merge(profileDataKeys, profileDataValues),
-      object
+    const proxies = go(
+      rangeL(ips.length),
+      mapL(i => ({
+        ip: ips[i].replace(/document\.write\(.+\)/, ''),
+        type: types[i],
+        latency: latencies[i],
+      })),
+      filter(a => a.type.startsWith('HTTP'))
     )
-    
-    const profile = {
-      profileImgUrl: profileImgUrl,
-      profileData: profileData
-    }
 
-    return !(id) 
-      ? go({ status: false, message: 'Error params' }, failure)
-      : go({ status: true, result: profile }, success)
+    return go({ status: true, result: proxies }, success)
   } catch (e) {
     await page.close();
     await browser.close();

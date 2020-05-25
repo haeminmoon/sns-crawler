@@ -16,6 +16,7 @@ exports.getBrowser = async () => {
         '--ignore-certifcate-errors',
         '--ignore-certifcate-errors-spki-list',
         '--user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3312.0 Safari/537.36"'
+        // `--proxy-server=${fastestProxies[0].ip}`
       ],
       ignoreHTTPSErrors: true
     })
@@ -28,7 +29,10 @@ exports.getBrowser = async () => {
 
     return await puppeteer.launch({
       executablePath: await chromium.executablePath,
-      args: chromium.args,
+      args: [
+        ...chromium.args
+        // `--proxy-server=${fastestProxies[0].ip}`
+      ],
       defaultViewport: chromium.defaultViewport,
       headless: chromium.headless,
     })
