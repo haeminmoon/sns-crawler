@@ -5,7 +5,7 @@ exports.getBrowser = async (fastProxy=undefined) => {
     const puppeteer = require('puppeteer-extra')
  
     const StealthPlugin = require('puppeteer-extra-plugin-stealth')
-    puppeteer.use(StealthPlugin())
+    // puppeteer.use(StealthPlugin())
 
     return await puppeteer.launch({ 
       headless: false,
@@ -18,7 +18,7 @@ exports.getBrowser = async (fastProxy=undefined) => {
         '--ignore-certifcate-errors',
         '--ignore-certifcate-errors-spki-list',
         '--user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3312.0 Safari/537.36"',
-        // (isUndefined(fastProxy)) ? '' : `--proxy-server=${fastProxy.ip}`
+        (isUndefined(fastProxy)) ? '' : `--proxy-server=${fastProxy.ip}`
       ],
       ignoreHTTPSErrors: true
     })
@@ -27,13 +27,13 @@ exports.getBrowser = async (fastProxy=undefined) => {
     const puppeteer = require('puppeteer-extra');
 
     const StealthPlugin = require('puppeteer-extra-plugin-stealth');
-    puppeteer.use(StealthPlugin());
+    // puppeteer.use(StealthPlugin());
 
     return await puppeteer.launch({
       executablePath: await chromium.executablePath,
       args: [
         ...chromium.args,
-        // (isUndefined(fastProxy)) ? '' : `--proxy-server=${fastProxy.ip}`
+        (isUndefined(fastProxy)) ? '' : `--proxy-server=${fastProxy.ip}`
       ],
       defaultViewport: chromium.defaultViewport,
       headless: chromium.headless,
