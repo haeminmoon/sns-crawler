@@ -1,5 +1,7 @@
 Object.assign(global, require('/opt/libs/node_modules/fff-js'))
 
+const { POOL } = require('/opt/libs/postgresql-lib');
+const { QUERY } = POOL;
 const { 
   convertEvent2inputData, 
   success, failure,

@@ -39,6 +39,10 @@ provider:
 
   # These environment variables are made available to our functions under process.env.
   environment:
+    DB_HOST: ${ssm:/${self:custom.stage}/crawlerdb/host~true}
+    DB_USER: ${ssm:/${self:custom.stage}/crawlerdb/user~true}
+    DB_PASSWORD: ${ssm:/${self:custom.stage}/crawlerdb/password~true}
+    DB_DATABASE: ${ssm:/${self:custom.stage}/crawlerdb/database~true}
 
 
   # you can add statements to the Lambda function's IAM Role here

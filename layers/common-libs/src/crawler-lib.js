@@ -1,4 +1,6 @@
-exports.getBrowser = async () => {
+Object.assign(global, require('fff-js'))
+
+exports.getBrowser = async (fastProxy=undefined) => {
   if (process.env.LOCAL == 'true') {
     const puppeteer = require('puppeteer-extra')
  
@@ -15,8 +17,8 @@ exports.getBrowser = async () => {
         '--window-position=0,0',
         '--ignore-certifcate-errors',
         '--ignore-certifcate-errors-spki-list',
-        '--user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3312.0 Safari/537.36"'
-        // `--proxy-server=${fastestProxies[0].ip}`
+        '--user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3312.0 Safari/537.36"',
+        // (isUndefined(fastProxy)) ? '' : `--proxy-server=${fastProxy.ip}`
       ],
       ignoreHTTPSErrors: true
     })
@@ -30,8 +32,8 @@ exports.getBrowser = async () => {
     return await puppeteer.launch({
       executablePath: await chromium.executablePath,
       args: [
-        ...chromium.args
-        // `--proxy-server=${fastestProxies[0].ip}`
+        ...chromium.args,
+        // (isUndefined(fastProxy)) ? '' : `--proxy-server=${fastProxy.ip}`
       ],
       defaultViewport: chromium.defaultViewport,
       headless: chromium.headless,

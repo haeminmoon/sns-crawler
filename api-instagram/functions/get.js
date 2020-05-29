@@ -1,5 +1,8 @@
 Object.assign(global, require('/opt/libs/node_modules/fff-js'))
 
+// const { POOL } = require('/opt/libs/postgresql-lib')
+// const { QUERY } = POOL;
+
 const { 
   convertEvent2inputData, 
   success, failure,
@@ -21,6 +24,13 @@ exports.getProfile = async (event, context) => {
   if (event.source === 'api-instagram-warmer') return
 
   const { id } = convertEvent2inputData(event)
+
+  // const fastProxy = await go(
+  //   QUERY`SELECT ip, latency FROM proxies ORDER BY latency ASC`,
+  //   take(5),
+  //   tap(log),
+  //   proxies => proxies[Math.floor(Math.random() * 5)]
+  // )
 
   const browser = await getBrowser()
   const page = await browser.newPage()
@@ -46,7 +56,7 @@ exports.getProfile = async (event, context) => {
 
     await page.close()
     await browser.close()
-
+    
     /** Result processing */
     const profile = go(
       [...targetEls, profileImgUrl],
