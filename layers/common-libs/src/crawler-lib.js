@@ -7,6 +7,10 @@ exports.getBrowser = async (fastProxy=undefined) => {
     StealthPlugin.onBrowser = () => {}
     puppeteer.use(StealthPlugin)
 
+    // const proxyChain = require('proxy-chain');
+    // const oldProxyUrl = `http://${fastProxy.ip}`
+    // const newProxyUrl = await proxyChain.anonymizeProxy(oldProxyUrl);
+
     return await puppeteer.launch({ 
       headless: false,
       executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', 
