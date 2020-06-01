@@ -6,7 +6,8 @@ syncProxyIpListScheduler:
     - ${cf:${self:custom.layer.stack}-${self:custom.stage}.${self:custom.layer.name.libs}}
     - ${cf:${self:custom.layer.stack}-${self:custom.stage}.${self:custom.layer.name.nodejs}}
   events:
-    - schedule: rate(1 minute)
+    - schedule: cron(0 14 * * ? *)
+    # - schedule: rate(1 hour)
     # - http:
     #   path: /proxy/getIpListScheduler
     #   method: get

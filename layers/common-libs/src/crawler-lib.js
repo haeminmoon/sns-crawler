@@ -3,9 +3,9 @@ Object.assign(global, require('fff-js'))
 exports.getBrowser = async (fastProxy=undefined) => {
   if (process.env.LOCAL == 'true') {
     const puppeteer = require('puppeteer-extra')
- 
-    const StealthPlugin = require('puppeteer-extra-plugin-stealth')
-    // puppeteer.use(StealthPlugin())
+    const StealthPlugin = require('puppeteer-extra-plugin-stealth')()
+    StealthPlugin.onBrowser = () => {}
+    puppeteer.use(StealthPlugin)
 
     return await puppeteer.launch({ 
       headless: false,
@@ -24,10 +24,10 @@ exports.getBrowser = async (fastProxy=undefined) => {
     })
   } else {
     const chromium = require('chrome-aws-lambda')
-    const puppeteer = require('puppeteer-extra');
-
-    const StealthPlugin = require('puppeteer-extra-plugin-stealth');
-    // puppeteer.use(StealthPlugin());
+    const puppeteer = require('puppeteer-extra')
+    const StealthPlugin = require('puppeteer-extra-plugin-stealth')()
+    StealthPlugin.onBrowser = () => {}
+    puppeteer.use(StealthPlugin)
 
     return await puppeteer.launch({
       executablePath: await chromium.executablePath,
