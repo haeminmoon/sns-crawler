@@ -9,7 +9,7 @@
   },
   "author": "Harace Moon",
   "dependencies": {
-    "aws-sdk": "^2.673.0",
+    "aws-sdk": "^2.814.0",
     "axios": "^0.19.2",
     "chrome-aws-lambda": "^3.0.4",
     "fff-js": "^0.0.14",
